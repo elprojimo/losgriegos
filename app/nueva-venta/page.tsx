@@ -48,8 +48,6 @@ export default function NuevaVentaPage() {
   }
 
   const handleSubmitVenta = async () => {
-    console.log("Venta items antes de submit")
-    console.log(ventaItems)
     if (ventaItems.length === 0) return
 
     const total = ventaItems.reduce((sum, item) => sum + item.producto.precio * item.cantidad, 0)
@@ -60,8 +58,6 @@ export default function NuevaVentaPage() {
     }
 
     try {
-      console.log("Venta antes de crear")
-      console.log(venta)
       await crearVenta({...venta, id: ''})
       setVentaItems([])
       toast({
@@ -98,7 +94,7 @@ export default function NuevaVentaPage() {
           </Card>
         ))}
       </div>
-      <Table>
+      <Table className="mb-24">
         <TableHeader>
           <TableRow>
             <TableHead>Producto</TableHead>
@@ -122,7 +118,7 @@ export default function NuevaVentaPage() {
           ))}
         </TableBody>
       </Table>
-      <div className="mt-4 flex justify-between items-center">
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 flex justify-between items-center">
         <div className="text-xl font-bold">
           Total: ${ventaItems.reduce((sum, item) => sum + item.producto.precio * item.cantidad, 0).toLocaleString()}
         </div>
