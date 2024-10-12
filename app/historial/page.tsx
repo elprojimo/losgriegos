@@ -26,19 +26,29 @@ export default function HistorialPage() {
   const [ventas, setVentas] = useState<Venta[]>([])
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0])
   const [ventaSeleccionada, setVentaSeleccionada] = useState<string | null>(null)
+  const { toast } = useToast()
   
   useEffect(() => {
     const fetchVentas = async () => {
       try {
         const ventasFromDB = await db.ventas.getAll()
-        setVentas(ventasFromDB)
+        const ventasFiltradas = ventasFromDB.filter(venta => {
+          const fechaVenta = new Date(venta.fecha).toISOString().split('T')[0]
+          return fechaVenta === fecha
+        })
+        setVentas(ventasFiltradas)
       } catch (error) {
         console.error('Error al obtener ventas:', error)
+        toast({
+          title: "Error",
+          description: "No se pudieron cargar las ventas. Por favor, intente de nuevo.",
+          variant: "destructive",
+        })
       }
     };
     
     fetchVentas()
-  }, [fecha])
+  }, [fecha, toast])
 
   const handleEliminarVenta = async () => {
     if (!ventaSeleccionada) return;
@@ -78,7 +88,7 @@ export default function HistorialPage() {
               <TableCell>
                 {venta.productos.map((item, index) => (
                   <div key={index}>
-                    {item.producto.nombre} x {item.cantidad}
+                    {item.producto.nombre} x {item.cantidad} - <strong>${item.producto.precio.toLocaleString()}</strong>
                   </div>
                 ))}
               </TableCell>
