@@ -49,6 +49,8 @@ async function seed() {
       { nombre: 'Hamburguesa sencilla', precio: 115 },
       { nombre: 'Hamburguesa doble', precio: 130 },
       { nombre: 'Domicilio', precio: 30 },
+      { nombre: 'Promo 3x150', precio: 150 },
+      { nombre: 'Promo 2x170', precio: 170 },
     ];
 
     for (const producto of productos) {

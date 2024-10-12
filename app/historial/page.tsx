@@ -117,7 +117,7 @@ export default function HistorialPage() {
         </TableBody>
       </Table>
       <div className="mt-4 text-xl font-bold">
-        Total del día: ${ventas.reduce((sum, venta) => sum + venta.total, 0).toLocaleString()}
+        Total del día: ${ventas.reduce((sum, venta) => sum + Number(venta.total), 0).toLocaleString()}
       </div>
     </div>
   )
