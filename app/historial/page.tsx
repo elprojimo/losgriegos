@@ -21,10 +21,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-
 export default function HistorialPage() {
   const [ventas, setVentas] = useState<Venta[]>([])
-  const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0])
+  const [fecha, setFecha] = useState(() => {
+    const today = new Date();
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+    return today.toISOString().split('T')[0];
+  })
   const [ventaSeleccionada, setVentaSeleccionada] = useState<string | null>(null)
   const { toast } = useToast()
   
@@ -33,9 +36,13 @@ export default function HistorialPage() {
       try {
         const ventasFromDB = await db.ventas.getAll()
         const ventasFiltradas = ventasFromDB.filter(venta => {
-          const fechaVenta = new Date(venta.fecha).toISOString().split('T')[0]
-          return fechaVenta === fecha
-        })
+          const fechaVenta = new Date(venta.fecha);
+          const fechaSeleccionada = new Date(fecha);
+          fechaSeleccionada.setMinutes(fechaSeleccionada.getMinutes() + fechaSeleccionada.getTimezoneOffset());
+          return fechaVenta.getDate() === fechaSeleccionada.getDate() &&
+                 fechaVenta.getMonth() === fechaSeleccionada.getMonth() &&
+                 fechaVenta.getFullYear() === fechaSeleccionada.getFullYear();
+        });
         setVentas(ventasFiltradas)
       } catch (error) {
         console.error('Error al obtener ventas:', error)
